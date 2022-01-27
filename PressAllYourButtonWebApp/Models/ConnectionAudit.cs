@@ -12,7 +12,7 @@
 
     public enum ActionTypeEnum : byte
     { 
-        Connected = 0,
-        Disconnected = 1
+        Connected = 1,
+        Disconnected = 0
     }
 }

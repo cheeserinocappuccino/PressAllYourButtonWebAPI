@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PressAllYourButtonWebApp;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authentication.Cookies; 
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,8 +13,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 // Add Db connection
 builder.Services.AddDbContext<PressAYBDbContext>(opt => opt.UseSqlServer("name=ConnectionStrings:PressAYBDatabase"));
+
+// Use cokkie authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(op =>
+    {
+        op.ExpireTimeSpan = TimeSpan.FromDays(60);
+    
+    });
+
+// enable usage of Httpcontext in custom class
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 
@@ -26,6 +40,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCookiePolicy(); // Enable Global 
+app.UseAuthentication(); // Add to enable cokkie Auth
 app.UseAuthorization();
 
 app.MapControllers();

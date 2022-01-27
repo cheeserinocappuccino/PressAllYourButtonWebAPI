@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PressAllYourButtonWebApp;
 
@@ -11,9 +12,10 @@ using PressAllYourButtonWebApp;
 namespace PressAllYourButtonWebApp.Migrations
 {
     [DbContext(typeof(PressAYBDbContext))]
-    partial class PressAYBDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220127123305_InitialMigrations")]
+    partial class InitialMigrations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,9 +52,6 @@ namespace PressAllYourButtonWebApp.Migrations
                     b.Property<int>("Belong_User")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DeviceType_id")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("Manufacture_Date")
                         .HasColumnType("datetime2");
 
@@ -60,26 +59,7 @@ namespace PressAllYourButtonWebApp.Migrations
 
                     b.HasIndex("Belong_User");
 
-                    b.HasIndex("DeviceType_id");
-
                     b.ToTable("Devices");
-                });
-
-            modelBuilder.Entity("PressAllYourButtonWebApp.Models.DeviceType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DeviceType");
                 });
 
             modelBuilder.Entity("PressAllYourButtonWebApp.Models.UserInfo", b =>
@@ -105,7 +85,8 @@ namespace PressAllYourButtonWebApp.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasAnnotation("SqlServer:Identity", "1, 1");
 
                     b.ToTable("UserInfos");
                 });
@@ -117,12 +98,6 @@ namespace PressAllYourButtonWebApp.Migrations
                         .HasForeignKey("Belong_User")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("PressAllYourButtonWebApp.Models.DeviceType", "deviceType")
-                        .WithMany()
-                        .HasForeignKey("DeviceType_id");
-
-                    b.Navigation("deviceType");
 
                     b.Navigation("userinfo");
                 });
