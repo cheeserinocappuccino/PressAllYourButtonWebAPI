@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PressAllYourButtonWebApp;
 
@@ -11,9 +12,10 @@ using PressAllYourButtonWebApp;
 namespace PressAllYourButtonWebApp.Migrations
 {
     [DbContext(typeof(PressAYBDbContext))]
-    partial class PressAYBDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220128140752_AddNicknameByUseColumnInDevice")]
+    partial class AddNicknameByUseColumnInDevice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +49,7 @@ namespace PressAllYourButtonWebApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("Belong_User")
+                    b.Property<int>("Belong_User")
                         .HasColumnType("int");
 
                     b.Property<int?>("DeviceType_id")
@@ -118,7 +120,9 @@ namespace PressAllYourButtonWebApp.Migrations
                 {
                     b.HasOne("PressAllYourButtonWebApp.Models.UserInfo", "userinfo")
                         .WithMany("devices")
-                        .HasForeignKey("Belong_User");
+                        .HasForeignKey("Belong_User")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PressAllYourButtonWebApp.Models.DeviceType", "deviceType")
                         .WithMany()

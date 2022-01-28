@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PressAllYourButtonWebApp.Services;
 using PressAllYourButtonWebApp.DTOs;
+using Microsoft.AspNetCore.Authorization;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PressAllYourButtonWebApp.Controllers
 {
-    [Route("login")]
+    [Route("[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
     {
@@ -17,18 +18,28 @@ namespace PressAllYourButtonWebApp.Controllers
 
 
 
-        // POST api/<LoginController>
+        
         [HttpPost]
-        public async Task<ActionResult<string>> Post([FromBody]LoginInfoDTO value)
+        public async Task<ActionResult<string>> LoginAsync([FromBody]LoginInfoDTO value)
         {
 
-            string result = await loginService.Login(value);
+            string result = await loginService.LoginAsync(value);
+
+
+            return result;
+
+        }
+
+        [Authorize]
+        [HttpPost("/logout")]
+        public async Task<ActionResult<string>> LogOutAsync([FromBody] LoginInfoDTO value)
+        {
+
+            string result = await loginService.LogoutAsync();
 
 
             return result;
         }
 
-
-        
     }
 }

@@ -40,13 +40,17 @@ namespace PressAllYourButtonWebApp
             modelbuilder.Entity<Device>()
                 .HasOne(d => d.userinfo)
                 .WithMany(u => u.devices)
-                .IsRequired()
                 .HasForeignKey(d => d.Belong_User);
 
             modelbuilder.Entity<Device>()
                 .HasOne(d => d.deviceType)
                 .WithMany()
+                .IsRequired()
                 .HasForeignKey(d => d.DeviceType_id);
+
+            modelbuilder.Entity<Device>()
+                .Property(d => d.NicknameByUser)
+                .HasMaxLength(30);
 
         }
 
