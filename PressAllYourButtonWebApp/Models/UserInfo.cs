@@ -7,6 +7,8 @@
         public string Email { get; set; }
         public byte[] Password { get; set; }    
 
+        public byte[] Iv { get; set; }
+
         public IEnumerable<Device> devices { get; set; }
 
     }

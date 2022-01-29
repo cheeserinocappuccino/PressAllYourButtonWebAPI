@@ -39,6 +39,12 @@ namespace PressAllYourButtonWebApp
                 .HasColumnType("varbinary")
                 .HasMaxLength(32);
 
+            modelbuilder.Entity<UserInfo>()
+                .Property(u => u.Iv)
+                .HasColumnType("varbinary")
+                .HasMaxLength(16);
+                
+
             modelbuilder.Entity<UserInfo>().
                 Property(u => u.Email)
                 .HasMaxLength(50);
