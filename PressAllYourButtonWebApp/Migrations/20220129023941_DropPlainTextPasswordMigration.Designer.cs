@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PressAllYourButtonWebApp;
 
@@ -11,9 +12,10 @@ using PressAllYourButtonWebApp;
 namespace PressAllYourButtonWebApp.Migrations
 {
     [DbContext(typeof(PressAYBDbContext))]
-    partial class PressAYBDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220129023941_DropPlainTextPasswordMigration")]
+    partial class DropPlainTextPasswordMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,11 +100,6 @@ namespace PressAllYourButtonWebApp.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<byte[]>("Password")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("varbinary(32)");
 
                     b.Property<string>("UserName")
                         .IsRequired()

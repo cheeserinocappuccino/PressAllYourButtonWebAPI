@@ -19,10 +19,11 @@ namespace PressAllYourButtonWebApp.Services
 
         public async Task<string> LoginAsync(LoginInfoDTO value)
         {
-            
+
             var user = dbContext.UserInfos.
-                Where(u => u.Email == value.Email).
-                Where(u => u.Password == value.Password).SingleOrDefault();
+                Where(u => u.Email == value.Email)
+                .SingleOrDefault();
+                //.Where(u => u.Password == value.Password).SingleOrDefault();
 
             if (user == null)
             {
