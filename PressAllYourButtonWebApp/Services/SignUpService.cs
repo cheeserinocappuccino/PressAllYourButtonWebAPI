@@ -9,12 +9,12 @@ namespace PressAllYourButtonWebApp.Services
     
     public class SignUpService
     {
-        readonly IConfiguration Configuration;
+        readonly IConfiguration configuration;
         PressAYBDbContext dbcontext;
-        public SignUpService(PressAYBDbContext db, IConfiguration configuration)
+        public SignUpService(PressAYBDbContext db, IConfiguration config)
         {
             dbcontext = db;
-            Configuration = configuration;
+            configuration = config;
         }
 
         public string SignUp(SignUpInfoDTO value)
@@ -40,7 +40,7 @@ namespace PressAllYourButtonWebApp.Services
             UTF8Encoding utf8 = new UTF8Encoding();
 
             // Call aes algorithm to encrypt password
-            var encryptedPassword = EncryptStringToBytes_Aes(value.Password, utf8.GetBytes(Configuration["AES_Key"]), ivForUser);
+            var encryptedPassword = EncryptStringToBytes_Aes(value.Password, utf8.GetBytes(configuration["AES_Key"]), ivForUser);
 
             // create new object for dbo.UserInfos
             UserInfo userinfo = new UserInfo() {
@@ -59,32 +59,38 @@ namespace PressAllYourButtonWebApp.Services
             return "UserAdded";
         }
 
-        public byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
+        private static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
         {
             byte[] encrypted;
 
             Aes aesObj = Aes.Create();
 
-            // Set AES Key(128) and initial vector
+            // Set AES Key and initial vector from caller
             aesObj.Key = Key;
             aesObj.IV = IV;
 
             // 待補
             ICryptoTransform encryptor = aesObj.CreateEncryptor(aesObj.Key, aesObj.IV);
 
-            MemoryStream msEncrypt = new MemoryStream();
-            CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
-            StreamWriter swEncrypt = new StreamWriter(csEncrypt);
 
-            swEncrypt.Write(plainText);
-            swEncrypt.Dispose();
+            // use using statment to specify stream object's lifeime
+            // but for readability I manually dispose AES object at the end of this function
+            using (MemoryStream msEncrypt = new MemoryStream()) 
+            {
+                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                {
+                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                    {
+                        swEncrypt.Write(plainText);
+                       
+                    }
+                    encrypted = msEncrypt.ToArray();
+                }
+            }
 
-            encrypted = msEncrypt.ToArray();
-            csEncrypt.Dispose();
 
+            aesObj.Dispose();
 
-
-            msEncrypt.Dispose();
             return encrypted;
 
 

@@ -11,7 +11,7 @@
   "profiles": {
     "PressAllYourButtonWebApp": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
+      "dotnetRunMessages": false,
       "launchBrowser": true,
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7080;http://localhost:5080",

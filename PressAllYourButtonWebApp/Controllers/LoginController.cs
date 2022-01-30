@@ -11,9 +11,9 @@ namespace PressAllYourButtonWebApp.Controllers
     public class LoginController : ControllerBase
     {
         LoginService loginService;
-        public LoginController(PressAYBDbContext p, IHttpContextAccessor h)
+        public LoginController(PressAYBDbContext p, IHttpContextAccessor h, IConfiguration config)
         {
-            loginService = new LoginService(p, h);
+            loginService = new LoginService(p, h, config);
         }
 
 
