@@ -32,7 +32,7 @@ namespace PressAllYourButtonWebApp.Controllers
 
         [Authorize]
         [HttpPost("/logout")]
-        public async Task<ActionResult<string>> LogOutAsync([FromBody] LoginInfoDTO value)
+        public async Task<ActionResult<string>> LogOutAsync()
         {
 
             string result = await loginService.LogoutAsync();
