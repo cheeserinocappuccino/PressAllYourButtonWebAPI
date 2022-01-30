@@ -26,13 +26,17 @@ namespace PressAllYourButtonWebApp
                 HasColumnType("DateTime");
 
             modelbuilder.Entity<UserInfo>().
+                Property(u => u.Id)
+                .ValueGeneratedOnAdd();
+
+            modelbuilder.Entity<UserInfo>().
                 Property(u => u.UserName)
                 .HasMaxLength(20);
 
             // For AES encrypted output, 1 character = 1 byte output
             // a maximum 31 char password needs 32byte
             // a maximum 32 char password needs 48byte
-            // ( it append 16 byte at once each time input reaches limit)
+            // ( it append 16 byte at once for each time input reaches limit)
             // https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.aes?view=net-6.0
             modelbuilder.Entity<UserInfo>().
                 Property(u => u.Password)
@@ -51,7 +55,7 @@ namespace PressAllYourButtonWebApp
 
             modelbuilder.Entity<Device>()
                 .HasOne(d => d.userinfo)
-                .WithMany(u => u.devices)
+                .WithMany(u => u.Devices)
                 .HasForeignKey(d => d.Belong_User);
 
             modelbuilder.Entity<Device>()

@@ -1,23 +1,25 @@
 ﻿using PressAllYourButtonWebApp.Models;
+using PressAllYourButtonWebApp.DTOs;
 using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography;
 using System.Text;
+
 namespace PressAllYourButtonWebApp.Services
 {
     
     public class SignUpService
     {
         readonly IConfiguration Configuration;
-        PressAYBDbContext context;
+        PressAYBDbContext dbcontext;
         public SignUpService(PressAYBDbContext db, IConfiguration configuration)
         {
-            context = db;
+            dbcontext = db;
             Configuration = configuration;
         }
 
-        public string SignUpAsync(string name, string email, string inputpw)
+        public string SignUp(SignUpInfoDTO value)
         {
-            var user = context.UserInfos.Where(u => u.Email == email).SingleOrDefault();
+            var user = dbcontext.UserInfos.Where(u => u.Email == value.Email).SingleOrDefault();
             if (user != null)
                 return "UserExists";
 
@@ -25,7 +27,7 @@ namespace PressAllYourButtonWebApp.Services
             var builder = WebApplication.CreateBuilder();
 
             // need to add validation in the future
-
+            // add here
             // -------------------------------
 
             // Password Encryption
@@ -38,20 +40,23 @@ namespace PressAllYourButtonWebApp.Services
             UTF8Encoding utf8 = new UTF8Encoding();
 
             // Call aes algorithm to encrypt password
-            var encryptedPassword = EncryptStringToBytes_Aes(inputpw, utf8.GetBytes(Configuration["AES_Key"]), ivForUser);
+            var encryptedPassword = EncryptStringToBytes_Aes(value.Password, utf8.GetBytes(Configuration["AES_Key"]), ivForUser);
 
             // create new object for dbo.UserInfos
             UserInfo userinfo = new UserInfo() {
-                UserName = name,
-                Email = email,
-                Password = encryptedPassword
+                UserName = value.UserName,
+                Email = value.Email,
+                Password = encryptedPassword,
+                Iv = ivForUser,
+                Verified = false
+                
             };
-            
+
+            dbcontext.UserInfos.Add(userinfo);
+            dbcontext.SaveChanges();
 
 
-
-
-            return null;
+            return "UserAdded";
         }
 
         public byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PressAllYourButtonWebApp;
 
@@ -11,9 +12,10 @@ using PressAllYourButtonWebApp;
 namespace PressAllYourButtonWebApp.Migrations
 {
     [DbContext(typeof(PressAYBDbContext))]
-    partial class PressAYBDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220129144004_AddVerifiedColumnToUserInfo")]
+    partial class AddVerifiedColumnToUserInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +40,7 @@ namespace PressAllYourButtonWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ConnectionAudits", (string)null);
+                    b.ToTable("ConnectionAudits");
                 });
 
             modelBuilder.Entity("PressAllYourButtonWebApp.Models.Device", b =>
@@ -66,7 +68,7 @@ namespace PressAllYourButtonWebApp.Migrations
 
                     b.HasIndex("DeviceType_id");
 
-                    b.ToTable("Devices", (string)null);
+                    b.ToTable("Devices");
                 });
 
             modelBuilder.Entity("PressAllYourButtonWebApp.Models.DeviceType", b =>
@@ -83,7 +85,7 @@ namespace PressAllYourButtonWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeviceType", (string)null);
+                    b.ToTable("DeviceType");
                 });
 
             modelBuilder.Entity("PressAllYourButtonWebApp.Models.UserInfo", b =>
@@ -119,7 +121,7 @@ namespace PressAllYourButtonWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserInfos", (string)null);
+                    b.ToTable("UserInfos");
                 });
 
             modelBuilder.Entity("PressAllYourButtonWebApp.Models.Device", b =>
