@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using System.Security.Cryptography;
 using System.Linq;
 using System.Text;
 namespace PressAllYourButtonWebApp.Services
@@ -37,7 +35,7 @@ namespace PressAllYourButtonWebApp.Services
             var cryptIv = user.Iv;
 
 
-            var pwText = DecryptStringFromBytes_Aes(cryptPw, key, cryptIv);
+            var pwText = CryptograhpyService.DecryptStringFromBytes_Aes(cryptPw, key, cryptIv);
             if (value.Password != pwText)
                 return "Wrong user password";
 
@@ -72,37 +70,7 @@ namespace PressAllYourButtonWebApp.Services
             return "LoggedOut";
         }
 
-        private static string DecryptStringFromBytes_Aes(byte[] db_pass, byte[] db_Key, byte[] db_IV)
-        {
-            string plaintext = "";
-
-            Aes aesObj = Aes.Create();
-
-            // Set AES Key and initial vector from caller
-            aesObj.Key = db_Key;
-            aesObj.IV = db_IV;
-
-            ICryptoTransform decryptor = aesObj.CreateDecryptor(aesObj.Key, aesObj.IV);
-
-            // use using statment to specify stream object's lifeime
-            // but for readability I manually dispose AES object at the end of this function
-            using (MemoryStream msDecrypt = new MemoryStream(db_pass))
-            {
-                using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                {
-                    using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-                    {
-                        // Read the decrypted bytes from the decrypting stream
-                        // and place them in a string.
-                        plaintext = srDecrypt.ReadToEnd();
-                    }
-                }
-            }
-
-            aesObj.Dispose();
-
-            return plaintext;
-        }
+        
 
     }
 }

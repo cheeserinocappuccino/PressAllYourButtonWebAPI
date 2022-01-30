@@ -40,7 +40,7 @@ namespace PressAllYourButtonWebApp.Services
             UTF8Encoding utf8 = new UTF8Encoding();
 
             // Call aes algorithm to encrypt password
-            var encryptedPassword = EncryptStringToBytes_Aes(value.Password, utf8.GetBytes(configuration["AES_Key"]), ivForUser);
+            var encryptedPassword = CryptograhpyService.EncryptStringToBytes_Aes(value.Password, utf8.GetBytes(configuration["AES_Key"]), ivForUser);
 
             // create new object for dbo.UserInfos
             UserInfo userinfo = new UserInfo() {
@@ -59,42 +59,7 @@ namespace PressAllYourButtonWebApp.Services
             return "UserAdded";
         }
 
-        private static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
-        {
-            byte[] encrypted;
-
-            Aes aesObj = Aes.Create();
-
-            // Set AES Key and initial vector from caller
-            aesObj.Key = Key;
-            aesObj.IV = IV;
-
-            // 待補
-            ICryptoTransform encryptor = aesObj.CreateEncryptor(aesObj.Key, aesObj.IV);
-
-
-            // use using statment to specify stream object's lifeime
-            // but for readability I manually dispose AES object at the end of this function
-            using (MemoryStream msEncrypt = new MemoryStream()) 
-            {
-                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                {
-                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                    {
-                        swEncrypt.Write(plainText);
-                       
-                    }
-                    encrypted = msEncrypt.ToArray();
-                }
-            }
-
-
-            aesObj.Dispose();
-
-            return encrypted;
-
-
-        }
+        
 
     }
 }
