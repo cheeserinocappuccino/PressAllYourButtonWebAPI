@@ -68,6 +68,9 @@ namespace PressAllYourButtonWebApp
                 .Property(d => d.NicknameByUser)
                 .HasMaxLength(30);
 
+            modelbuilder.Entity<Device>()
+                .Property(d => d.Manufacture_Date)
+                .HasColumnType("date");
         }
 
     }
