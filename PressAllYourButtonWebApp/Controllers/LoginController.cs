@@ -41,5 +41,14 @@ namespace PressAllYourButtonWebApp.Controllers
             return result;
         }
 
+        [HttpPost("/signup")]
+        public ActionResult<string> SignUp(SignUpInfoDTO dto)
+        {
+            string result = loginService.SignUp(dto);
+
+            return result;
+
+        }
+
     }
 }

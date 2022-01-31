@@ -1,9 +1,11 @@
 ﻿using PressAllYourButtonWebApp.DTOs;
+using PressAllYourButtonWebApp.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using System.Linq;
 using System.Text;
+using System.Security.Cryptography;
 namespace PressAllYourButtonWebApp.Services
 {
     public class LoginService
@@ -70,7 +72,49 @@ namespace PressAllYourButtonWebApp.Services
             return "LoggedOut";
         }
 
-        
+        public string SignUp(SignUpInfoDTO value)
+        {
+            var user = dbContext.UserInfos.Where(u => u.Email == value.Email).SingleOrDefault();
+            if (user != null)
+                return "UserExists";
+
+            // get appsetting.json
+            var builder = WebApplication.CreateBuilder();
+
+            // need to add validation in the future
+            // add here
+            // -------------------------------
+
+            // Password Encryption
+
+            // create a new aes obj to generat Iv for this particular user
+            Aes aesForUser = Aes.Create();
+            var ivForUser = aesForUser.IV;
+
+            // decoder for key
+            UTF8Encoding utf8 = new UTF8Encoding();
+
+            // Call aes algorithm to encrypt password
+            var encryptedPassword = CryptograhpyService.EncryptStringToBytes_Aes(value.Password, utf8.GetBytes(configuration["AES_Key"]), ivForUser);
+
+            // create new object for dbo.UserInfos
+            UserInfo userinfo = new UserInfo()
+            {
+                UserName = value.UserName,
+                Email = value.Email,
+                Password = encryptedPassword,
+                Iv = ivForUser,
+                Verified = false
+
+            };
+
+            dbContext.UserInfos.Add(userinfo);
+            dbContext.SaveChanges();
+
+
+            return "UserAdded";
+        }
+
 
     }
 }
