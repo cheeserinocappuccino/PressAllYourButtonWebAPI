@@ -7,7 +7,7 @@
         public int? Belong_User { get; set;}
         public DateTime? Manufacture_Date { get; set; }
 
-        public DeviceType? deviceType { get; set; }
+        public DeviceType? DeviceType { get; set; }
 
         public int? DeviceType_id { get; set; }
 

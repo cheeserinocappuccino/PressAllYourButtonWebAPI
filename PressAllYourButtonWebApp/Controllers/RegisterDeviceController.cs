@@ -19,13 +19,24 @@ namespace PressAllYourButtonWebApp.Controllers
         {
             service = new DeviceRegisterService(db, ac);
         }
-        
+
+        [Authorize]
+        [HttpGet("~/GetMyDevices")]
+        public ActionResult<List<DeviceGetDTO>> GetMyDevices() 
+        {
+            var result = service.GetOwnDevices();
+            
+
+            return result;
+        }
+
+
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<string>> RegisterDevices(DeviceRegDTO deviceDto)
         {
-           
 
-            string result = await service.RegDevice(deviceDto);
+            string result = await service.RegDeviceAsync(deviceDto);
 
             return result;
         }

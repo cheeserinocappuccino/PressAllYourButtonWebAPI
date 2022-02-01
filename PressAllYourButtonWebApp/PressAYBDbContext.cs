@@ -59,7 +59,7 @@ namespace PressAllYourButtonWebApp
                 .HasForeignKey(d => d.Belong_User);
 
             modelbuilder.Entity<Device>()
-                .HasOne(d => d.deviceType)
+                .HasOne(d => d.DeviceType)
                 .WithMany()
                 .IsRequired()
                 .HasForeignKey(d => d.DeviceType_id);

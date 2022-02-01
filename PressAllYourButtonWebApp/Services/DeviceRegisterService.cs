@@ -13,7 +13,7 @@ namespace PressAllYourButtonWebApp.Services
             httpContextAccessor = ac;
         }
 
-        public async Task<string> RegDevice(DeviceRegDTO value)
+        public async Task<string> RegDeviceAsync(DeviceRegDTO value)
         {
             var device = dbContext.Devices.Where(d => d.Id == value.Id).SingleOrDefault();
             if (device == null)
@@ -21,7 +21,7 @@ namespace PressAllYourButtonWebApp.Services
             if (device.Belong_User != null)
                 return "Device has been registered";
 
-            // Get Claim value from user's identity
+            // Get Claim value from current user's identity
             int userid =int.Parse(httpContextAccessor.HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault());
 
             device.Belong_User = userid;
@@ -35,7 +35,23 @@ namespace PressAllYourButtonWebApp.Services
             return log;
         }
 
+        public List<DeviceGetDTO> GetOwnDevices()
+        {
 
+            int userid = int.Parse(httpContextAccessor.HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault());
+
+            // Select device model to a simplified version (DEviceGetDTO) to filter out excessive info 
+            var devices = dbContext.Devices.Where(d => d.Belong_User == userid)
+                .Select(o => new DeviceGetDTO()
+                {
+                    Id = o.Id,
+                    DeviceTypeName = o.DeviceType.Name,
+                    NicknameByUser = o.NicknameByUser
+                }).ToList() ;
+
+
+            return devices;
+        }
 
     }
 }
