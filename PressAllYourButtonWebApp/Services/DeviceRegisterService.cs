@@ -53,5 +53,22 @@ namespace PressAllYourButtonWebApp.Services
             return devices;
         }
 
+        public async Task<string> DisownDevice(Guid deviceGUID)
+        {
+            int userid = int.Parse(httpContextAccessor.HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault());
+            var device = dbContext.Devices.Where(d => d.Id == deviceGUID).Where(d => d.Belong_User == userid).SingleOrDefault();
+
+            if (device == null)
+                return "device not exist or you don't have permission";
+
+            var result = string.Format("Disowned device {0}", device.NicknameByUser);
+
+            device.Belong_User = null;
+            device.NicknameByUser = "";
+            await dbContext.SaveChangesAsync();
+
+            return result;
+        }
+
     }
 }

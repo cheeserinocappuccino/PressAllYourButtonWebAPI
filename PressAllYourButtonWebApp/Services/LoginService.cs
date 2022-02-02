@@ -42,12 +42,18 @@ namespace PressAllYourButtonWebApp.Services
 
 
 
-
+            // Static Claim values
             var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Email),
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
                 };
+
+            // Dynamic Claim values (such as registered device)
+         
+            
+            
+            
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 

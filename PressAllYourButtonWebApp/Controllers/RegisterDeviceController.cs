@@ -41,6 +41,15 @@ namespace PressAllYourButtonWebApp.Controllers
             return result;
         }
 
+        [Authorize]
+        [HttpPut("~/DisownDevice")]
+        public async Task<ActionResult<string>> DisownDevice([FromBody]Guid id)
+        {
+
+            string result = await service.DisownDevice(id);
+
+            return result;
+        }
 
     }
 }
