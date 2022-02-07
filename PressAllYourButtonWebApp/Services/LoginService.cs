@@ -12,7 +12,7 @@ namespace PressAllYourButtonWebApp.Services
     {
         PressAYBDbContext dbContext;
         IHttpContextAccessor httpContextAccessor; // To access HttpContext.SignInAsync
-        readonly IConfiguration configuration;
+        readonly IConfiguration configuration;// To access stuff in appsettings.json
 
         public LoginService(PressAYBDbContext p, IHttpContextAccessor h, IConfiguration config)
         {
